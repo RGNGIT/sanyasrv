@@ -7,4 +7,10 @@ export default class PhysRepository {
     public async getUserById(id) {
         return await dbInstanse.query(`SELECT * FROM phys_emp WHERE id = ${id};`);
     }
+    public async deleteUserById(id) {
+        return await dbInstanse.query(`DELETE DROM phys_emp WHERE id = ${id};`);
+    }
+    public async getAllUsers() {
+        return await dbInstanse.query(`SELECT * FROM phys_emp;`);
+    }
 }

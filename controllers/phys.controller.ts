@@ -58,5 +58,24 @@ export default class PhysController {
                 res.send('Oshibka: ' + e.message);
             }
         });
+        this.app.get('/users', async (req, res) => {
+            try {
+                const physRepo = new PhysRepository();
+                const [users] = await physRepo.getAllUsers();
+                res.json(users);
+            } catch(e) {
+                res.send('Oshibka: ' + e.message);
+            }
+        });
+        this.app.delete('/user/:id', async (req, res) => {
+            try {
+                const physRepo = new PhysRepository();
+                const {id} = req.params;
+                await physRepo.deleteUserById(id);
+                res.send("Done");
+            } catch(e) {
+                res.send('Oshibka: ' + e.message);
+            }
+        });
     }
 }

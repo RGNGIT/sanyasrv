@@ -5,10 +5,10 @@ interface Organization {
     id: number;
     name: string;
     shName?: string;
-    addr: string;
-    email: string;
-    domain: string;
-    phone: string;
+    addr: {};
+    email: {};
+    domain: {};
+    phone: {};
 } 
 
 export default class OrganizationController {
@@ -35,19 +35,38 @@ export default class OrganizationController {
                 const dickRepo = new DictionaryRepository();
                 const {id} = req.params;
                 const [organizations] = await orgRepo.getOrganizationBuId(id);
-                const [addrs] = await dickRepo.getAddressById((organizations as Array<{}>)[0]['addr_key']);
-                const [emails] = await dickRepo.getEmailById((organizations as Array<{}>)[0]['email_key']);
-                const [domains] = await dickRepo.getDomainById((organizations as Array<{}>)[0]['domain_key']);
-                const [phones] = await dickRepo.getPhoneById((organizations as Array<{}>)[0]['phone_key']);
+                const [addrs] = await dickRepo.getAddressById((organizations as {}[])[0]['addr_key']);
+                const [emails] = await dickRepo.getEmailById((organizations as {}[])[0]['email_key']);
+                const [domains] = await dickRepo.getDomainById((organizations as {}[])[0]['domain_key']);
+                const [phones] = await dickRepo.getPhoneById((organizations as {}[])[0]['phone_key']);
                 res.json({
-                    id: (organizations as Array<{}>)[0]['id'] as number,
-                    name: (organizations as Array<{}>)[0]['name'] as string,
-                    shName: (organizations as Array<{}>)[0]['sh_name'] as string,
+                    id: (organizations as {}[])[0]['id'] as number,
+                    name: (organizations as {}[])[0]['name'] as string,
+                    shName: (organizations as {}[])[0]['sh_name'] as string,
                     addr: addrs[0],
                     email: emails[0],
                     domain: domains[0],
                     phone: phones[0]
                 } as Organization);
+            } catch(e) {
+                res.send('Oshibka: ' + e.message);
+            }
+        });
+        this.app.get('/organizations', async (req, res) => {
+            try {
+                const orgRepo = new OrganizationRepository();
+                const [orgs] = await orgRepo.getAllOrganizations();
+                res.json(orgs);
+            } catch(e) {
+                res.send('Oshibka: ' + e.message);
+            }
+        });
+        this.app.delete('/organization/:id', async (req, res) => {
+            try {
+                const orgRepo = new OrganizationRepository();
+                const {id} = req.params;
+                await orgRepo.deleteOrganizationById(id);
+                res.send("Done");
             } catch(e) {
                 res.send('Oshibka: ' + e.message);
             }

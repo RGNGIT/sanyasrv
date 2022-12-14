@@ -7,4 +7,10 @@ export default class OrganizationRepository {
     public async getOrganizationBuId(id) {
         return await dbInstanse.query(`SELECT * FROM organization WHERE id = ${id};`);
     }
+    public async deleteOrganizationById(id) {
+        return await dbInstanse.query(`DELETE FROM organization WHERE id = ${id};`);
+    }
+    public async getAllOrganizations() {
+        return await dbInstanse.query(`SELECT * FROM organization;`);
+    }
 }
