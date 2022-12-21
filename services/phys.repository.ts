@@ -13,4 +13,7 @@ export default class PhysRepository {
     public async getAllUsers() {
         return await dbInstanse.query(`SELECT * FROM phys_emp;`);
     }
+    public async getUserByLogin(login) {
+        return await dbInstanse.query(`SELECT * FROM phys_emp WHERE login = '${login}';`);
+    }
 }

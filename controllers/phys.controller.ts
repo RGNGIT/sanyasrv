@@ -22,6 +22,26 @@ export default class PhysController {
     }
 
     public define() {
+        this.app.post('/login', async (req, res) => {
+            try {
+                const physRepo = new PhysRepository();
+                const hashService = new HashService();
+                const {login, password} = req.body;
+                const passwordDigest = hashService.encrypt(password);
+                const [users] = await physRepo.getUserByLogin(login);
+                if(users.length != 0) {
+                    if(users[0]['password'] == passwordDigest) {
+                        res.json(users[0]);
+                    } else {
+                        throw new Error('Login error');
+                    }
+                } else {
+                    throw new Error('Login error');
+                }
+            } catch(e) {
+                res.send('Oshibka: ' + e.message);
+            }
+        });
         this.app.post('/addPhys', async (req, res) => {
             try {
                 const physRepo = new PhysRepository();
