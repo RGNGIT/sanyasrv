@@ -97,5 +97,18 @@ export default class PhysController {
                 res.send('Oshibka: ' + e.message);
             }
         });
+        this.app.patch('/editUser/:id', async (req, res) => {
+            try {
+                const physRepo = new PhysRepository();
+                const hashService = new HashService();
+                const {name, surname, patron, login, password, occupId, orgId, statusId} = req.body;
+                const {id} = req.params;
+                const passwordDigest = hashService.encrypt(password);
+                await physRepo.updateUser(name, surname, patron, login, passwordDigest, occupId, orgId, statusId, id);
+                res.send("Done");
+            } catch(e) {
+                res.send('Oshibka: ' + e.message);
+            }
+        });
     }
 }
